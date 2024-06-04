@@ -6,5 +6,5 @@ export interface Pagination {
     totalPages: number;
     totalItems: number;
   },
-  books?: Book[];
+  books: Book[];
 }

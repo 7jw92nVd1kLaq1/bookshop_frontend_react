@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
 
 
-const BASE_URL = "http://127.0.0.1:5173";
+const BASE_URL = "http://localhost:3000";
 const DEFAULT_TIMEOUT = 10000;
 
 export const createClient = (config?: AxiosRequestConfig) => {
@@ -20,6 +20,11 @@ export const createClient = (config?: AxiosRequestConfig) => {
       return response;
     },
     (error) => {
+      if (error.response?.status === 401) {
+        // redirect to login page
+        window.location.href = "/login"; 
+        return
+      }
       return Promise.reject(error);
     }
   );

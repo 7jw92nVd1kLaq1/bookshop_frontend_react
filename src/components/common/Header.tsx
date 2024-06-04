@@ -5,20 +5,32 @@ import ThemeSwitcher from "../header/ThemeSwitcher";
 import icon from "../../assets/images/book.svg"; 
 import iconLight from "../../assets/images/book-light.svg";
 import { ThemeContext } from "../../context/themeContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Category } from "../../models/category.model";
 import { fetchCategories } from "../../api/category.api";
+import { checkTokenValidity } from "../../api/auth.api";
+import { useAuthStore } from "../../store/authStore";
 
 
 const Header : React.FC = () => {
   const {themeName} = useContext(ThemeContext);
   const [categories, setCategories] = React.useState<Category[]>([]);
+  const { storeLogin } = useAuthStore();
+  const location = useLocation();
 
   React.useEffect(() => {
     fetchCategories().then((data) => {
       setCategories(data);
     });
-  }, []);
+    checkTokenValidity().then((data) => {
+      console.log(data);
+      if (data.token) {
+        console.log(data.token);
+        storeLogin(data.token);
+      }
+    }); 
+    console.log("location changed");
+  }, [location]);
 
   return (
     <HeaderStyle>
@@ -40,7 +52,9 @@ const Header : React.FC = () => {
       <div>
         <nav className="auth">
           <div>
-            <a href="/login">Login</a>
+            <Link to="/login">
+              <button>Login</button>
+            </Link>
           </div>
           <div>
             <a href="/register">Register</a>
