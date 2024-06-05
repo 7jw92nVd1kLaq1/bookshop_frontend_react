@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { getDemoImageURL } from "../../../utils/image";
 import { Book } from "../../../models/book.model";
 import { formatNumber } from "../../../utils/format";
+import { Link } from "react-router-dom";
 
 
 interface BooksItemProps {
@@ -12,7 +13,9 @@ const BooksItem : React.FC<BooksItemProps> = ({book}) => {
   return (
     <BooksItemStyle>
         <img src={getDemoImageURL(600, 600)} alt="book" />
-        <h3>{book.title}</h3>
+        <Link to={`/books/${book.id}`}>
+          <h3>{book.title}</h3>
+        </Link>
         <p>{book.author.name}</p>
         <div className="price-likes">
             <p>{formatNumber(10000)}{'원'}</p>

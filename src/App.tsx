@@ -7,6 +7,7 @@ import Error from './components/common/Error';
 import Login from './pages/Login';
 import { checkTokenValidity } from './api/auth.api';
 import Books from './pages/Books';
+import BookDetail from './pages/BookDetail';
 
 
 const BrowserRouter = createBrowserRouter([
@@ -18,6 +19,10 @@ const BrowserRouter = createBrowserRouter([
   {
     path: "/books",
     element: <Layout flex={true}><Books /></Layout>,
+  },
+  {
+    path: "/books/:id",
+    element: <Layout><BookDetail/></Layout>
   },
   {
     path: "/login",

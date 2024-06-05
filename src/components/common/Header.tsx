@@ -10,12 +10,15 @@ import { Category } from "../../models/category.model";
 import { fetchCategories } from "../../api/category.api";
 import { checkTokenValidity } from "../../api/auth.api";
 import { useAuthStore } from "../../store/authStore";
+import { useCartStore } from "../../store/cartStore";
+import { getCart } from "../../api/cart.api";
 
 
 const Header : React.FC = () => {
   const {themeName} = useContext(ThemeContext);
   const [categories, setCategories] = React.useState<Category[]>([]);
   const { storeLogin } = useAuthStore();
+  const { setCart, cart } = useCartStore();
   const location = useLocation();
 
   React.useEffect(() => {
@@ -28,7 +31,10 @@ const Header : React.FC = () => {
         console.log(data.token);
         storeLogin(data.token);
       }
-    }); 
+    });
+    getCart().then((data) => {
+      setCart(data);
+    });
     console.log("location changed");
   }, [location]);
 
@@ -51,6 +57,9 @@ const Header : React.FC = () => {
       </nav>
       <div>
         <nav className="auth">
+          <div>
+            Cart Item Count: {cart.cartsItems.length}
+          </div>
           <div>
             <Link to="/login">
               <button>Login</button>

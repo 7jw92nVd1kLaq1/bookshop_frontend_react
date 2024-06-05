@@ -29,7 +29,7 @@ export interface Book {
   description: string;
   pageNumber: number;
   ISBN: string;
-  pubDate: Date;
+  pubDate: string;
   publishers: string;
   form: string;
   createdAt: Date;
@@ -42,6 +42,6 @@ export interface Book {
     id: number;
     name: string;
   };
-  likes?: number;
-  liked?: boolean;
+  likes: number;
+  liked: boolean;
 }

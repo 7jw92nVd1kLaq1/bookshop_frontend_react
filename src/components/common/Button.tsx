@@ -9,6 +9,7 @@ interface ButtonProps {
   scheme: SchemaType;
   disabled: boolean;
   isLoading: boolean;
+  onClick?: () => void | Promise<void>;
 }
 
 const Button : React.FC<ButtonProps> = ({
@@ -16,7 +17,8 @@ const Button : React.FC<ButtonProps> = ({
   size,
   scheme,
   disabled,
-  isLoading
+  isLoading,
+  onClick
 }) => {
   return (
     <ButtonStyle 
@@ -24,6 +26,7 @@ const Button : React.FC<ButtonProps> = ({
       scheme={scheme} 
       disabled={disabled} 
       isLoading={isLoading}
+      onClick={onClick}
     >
       {children}
     </ButtonStyle>
