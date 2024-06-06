@@ -54,5 +54,10 @@ export interface CartItem {
             name: string;
             id: number;
         };
+        prices: Array<{
+            id: number;
+            price: string;
+            createdAt: string;
+        }>;
     };
 }

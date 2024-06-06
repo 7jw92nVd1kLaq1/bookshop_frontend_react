@@ -8,6 +8,8 @@ import Login from './pages/Login';
 import { checkTokenValidity } from './api/auth.api';
 import Books from './pages/Books';
 import BookDetail from './pages/BookDetail';
+import Cart from './pages/Cart';
+import Order from './pages/Order';
 
 
 const BrowserRouter = createBrowserRouter([
@@ -38,6 +40,36 @@ const BrowserRouter = createBrowserRouter([
       }
     }
   },
+  {
+    path: "/cart",
+    element: <Layout><Cart /></Layout>,
+    loader: async () => {
+      try {
+        const {token} = await checkTokenValidity();
+        if (!token) {
+          return redirect("/login");
+        }
+        return null;
+      } catch (error) {
+        return null
+      }
+    }
+  },
+  {
+    path: "/order",
+    element: <Layout><Order /></Layout>,
+    loader: async () => {
+      try {
+        const {token} = await checkTokenValidity();
+        if (!token) {
+          return redirect("/login");
+        }
+        return null;
+      } catch (error) {
+        return null
+      }
+    }
+  }
 ]);
 
 function App() {
