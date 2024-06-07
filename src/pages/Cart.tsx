@@ -22,6 +22,7 @@ const Cart = () => {
     error
   } = useCart();
   const [checkedItems, setCheckedItems] = React.useState<number[]>([]);
+
   
   const handleCheck = (id: number) => {
     if (checkedItems.includes(id)) {

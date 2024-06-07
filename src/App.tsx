@@ -10,6 +10,7 @@ import Books from './pages/Books';
 import BookDetail from './pages/BookDetail';
 import Cart from './pages/Cart';
 import Order from './pages/Order';
+import OrderList from './pages/OrderList';
 
 
 const BrowserRouter = createBrowserRouter([
@@ -57,7 +58,37 @@ const BrowserRouter = createBrowserRouter([
   },
   {
     path: "/order",
-    element: <Layout><Order /></Layout>,
+    element: <Layout flex={true}><Order /></Layout>,
+    loader: async () => {
+      try {
+        const {token} = await checkTokenValidity();
+        if (!token) {
+          return redirect("/login");
+        }
+        return null;
+      } catch (error) {
+        return null
+      }
+    }
+  },
+  {
+    path: "/order/list",
+    element: <Layout><OrderList /></Layout>,
+    loader: async () => {
+      try {
+        const {token} = await checkTokenValidity();
+        if (!token) {
+          return redirect("/login");
+        }
+        return null;
+      } catch (error) {
+        return null
+      }
+    }
+  },
+  {
+    path: "/order/:id",
+    element: <Layout flex={true}><Order /></Layout>,
     loader: async () => {
       try {
         const {token} = await checkTokenValidity();
