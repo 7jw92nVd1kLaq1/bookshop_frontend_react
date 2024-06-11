@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import InputText from "../components/common/InputText";
-import { login } from "../api/auth.api";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
-import { useEffect } from "react";
+import useAuth from "../hooks/useAuth";
 
 
 export interface LoginFormProps {
@@ -13,31 +10,17 @@ export interface LoginFormProps {
 }
 
 const Login = () => {
-  const navigate = useNavigate();
+  const { userLogin, error } = useAuth();
   const { handleSubmit, register } = useForm<LoginFormProps>();
-
-  const { storeLogin, storeLogout } = useAuthStore();
-  const onSubmit = (data: LoginFormProps) => {
-    login(data).then((response: {token: string}) => {
-        storeLogin(response.token);
-        navigate("/");
-    }).catch((error) => {
-        console.log(error);
-        alert("Login failed");
-    });
-  };
-
-  useEffect(() => {
-    storeLogout();
-  }, []);
 
   return (
     <LoginStyle>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(userLogin)}>
             <InputText placeholder="Email" inputType="text" {...register("email")} />
             <InputText placeholder="Password" inputType="password" {...register("password")} />
             <button type="submit">Login</button>
         </form>
+        {error && <p>{error}</p>}
     </LoginStyle>
   );
 };

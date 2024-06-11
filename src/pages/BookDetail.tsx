@@ -10,11 +10,15 @@ import { useAuthStore } from "../store/authStore";
 import { useCartStore } from "../store/cartStore";
 import { useEffect, useState } from "react";
 import { addToCart as addToCartAPI } from "../api/cart.api";
+import useSingleBookReviews from "../hooks/useSingleBookReviews";
+import BookReview from "../components/common/bookDetail/BookReview";
+import { ReviewForm, createBookReview } from "../api/review.api";
+import BookReviewForm from "../components/common/bookDetail/BookReviewForm";
 
 
 const BookDetail = () => {
-  const [itemInCart, setItemInCart] = useState<boolean>(false);
   const {id} = useParams<{id: string}>();
+  const [itemInCart, setItemInCart] = useState<boolean>(false);
   const { cart, addToCart } = useCartStore();
   const { 
     book, 
@@ -23,7 +27,25 @@ const BookDetail = () => {
     handleLikeBook,
     handleUnlikeBook,
   } = useSingleBook(id);
+  const { 
+    reviews, 
+    loading: reviewsLoading, 
+    error: reviewsError,
+    refreshReviews,
+  } = useSingleBookReviews(id ? parseInt(id) : undefined);
   const { isLoggedIn } = useAuthStore();
+
+  const submitReview = (data: ReviewForm) => {
+    if (!id) {
+      return;
+    }
+    createBookReview(parseInt(id), data).then((responseData) => {
+      if (!responseData) {
+        return;
+      }
+      refreshReviews();
+    });
+  };
 
   useEffect(() => {
     if (!id) {
@@ -123,6 +145,29 @@ const BookDetail = () => {
         <p id="description">
             {book.description}
         </p>
+        <div id="review-form">
+          <Title size="medium">
+              Add Review
+          </Title>
+          <BookReviewForm submitReview={submitReview} />
+        </div>
+        <div id="reviews">
+            <Title size="medium">
+                Reviews
+            </Title>
+            {reviewsLoading && <p>Loading...</p>}
+            {reviewsError && <p>{reviewsError}</p>}
+            {reviews && reviews.map((review) => {
+                return (
+                  <BookReview 
+                    key={review.id} 
+                    title={review.title} 
+                    rating={review.rating}
+                    description={review.description} 
+                  />
+                )
+            })}
+        </div>
     </BooksItemStyle>
   )
 }
@@ -138,11 +183,28 @@ const BooksItemStyle = styled.div`
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
   #description {
     margin-top: 2rem;
+    margin-bottom: 2rem;
     color: ${props => props.theme.color.primary};
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 5;
+  }
+  #reviews {
+    margin-top: 2rem;
+    .review {
+        .rating {
+          display: flex;
+        }
+        margin-top: 1rem;
+        color: ${props => props.theme.color.primary};
+        h3 {
+            font-size: 1.5rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+    }
   }
 `; 
 
